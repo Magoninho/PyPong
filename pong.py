@@ -16,6 +16,9 @@ pygame.display.set_caption("PyPong by magoninho")
 
 start_time = 300
 
+pontos_p_1 = 0
+pontos_p_2 = 0
+
 #### CLASSES ####
 
 class Player:
@@ -43,33 +46,57 @@ class Player:
     #Exemplo: player = Player(args**)
     #player.updatePlayer()
     #esse player antes do ponto é oque o self representa ali embaixo
-    def updatePlayer(self):
+    def updatePlayer(self, p):
 
-        global moving_up, moving_down
+        global moving_up1, moving_down1, moving_up2, moving_down2
+        if p == 1:
+            # cima e baixo (apertando)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_w:
+                    moving_up1 = True
+                if event.key == pygame.K_s:
+                    moving_down1 = True
+            
+            # cima e baixo (soltando a tecla)
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_w:
+                    moving_up1 = False
+                if event.key == pygame.K_s:
+                    moving_down1 = False
 
-        # cima e baixo (apertando)
-        if event.type == pygame.KEYDOWN:
-            if event.key == pygame.K_UP:
-                moving_up = True
-            if event.key == pygame.K_DOWN:
-                moving_down = True
-        
-        # cima e baixo (soltando a tecla)
-        if event.type == pygame.KEYUP:
-            if event.key == pygame.K_UP:
-                moving_up = False
-            if event.key == pygame.K_DOWN:
-                moving_down = False
+            if moving_up1 == True:
+                self.rect.y -= self.s_vel
+            if moving_down1 == True:
+                self.rect.y += self.s_vel
 
-        if moving_up == True:
-            self.rect.y -= self.s_vel
-        if moving_down == True:
-            self.rect.y += self.s_vel
+            if self.rect.y > altura - 140:          ## colisões para nao sair do cenário
+                self.rect.y = altura - 140
+            if self.rect.y < 0:
+                self.rect.y = 0
+        else:
+            # cima e baixo (apertando)
+            if event.type == pygame.KEYDOWN:
+                if event.key == pygame.K_UP:
+                    moving_up2 = True
+                if event.key == pygame.K_DOWN:
+                    moving_down2 = True
+            
+            # cima e baixo (soltando a tecla)
+            if event.type == pygame.KEYUP:
+                if event.key == pygame.K_UP:
+                    moving_up2 = False
+                if event.key == pygame.K_DOWN:
+                    moving_down2 = False
 
-        if self.rect.y > altura - 140:          ## colisões para nao sair do cenário
-            self.rect.y = altura - 140
-        if self.rect.y < 0:
-            self.rect.y = 0
+            if moving_up2 == True:
+                self.rect.y -= self.s_vel
+            if moving_down2 == True:
+                self.rect.y += self.s_vel
+
+            if self.rect.y > altura - 140:          ## colisões para nao sair do cenário
+                self.rect.y = altura - 140
+            if self.rect.y < 0:
+                self.rect.y = 0
 class Bola:
     def __init__(self, x, y, rect, x_vel, y_vel, player1, player2):
         self.x = x
@@ -82,7 +109,7 @@ class Bola:
     def drawBola(self):
         pygame.draw.rect(screen, branco, self.rect)
     def animation(self):
-        
+        global pontos_p_1, pontos_p_2
         self.rect.x += self.x_vel
         self.rect.y += self.y_vel
 
@@ -91,14 +118,14 @@ class Bola:
 
         ###### GOLS dos jogadores ######
         
-        if self.rect.x >= window_Width - 40: 
+        if self.rect.x >= window_Width - 40: # GOL DO PLAYER 1
             self.rect.x = largura / 2 - 20
             self.rect.y = altura / 2 - 20
-
+            pontos_p_1 += 1
         if self.rect.x <= 0: # GOL DO PLAYER 2
             self.rect.x = largura / 2 - 20
             self.rect.y = altura / 2 - 20
-
+            pontos_p_2 += 1
 
         if self.rect.colliderect(self.player1) or self.rect.colliderect(self.player2):
             self.x_vel *= -1 ## MUDANÇA DE DIREÇÃO
@@ -122,8 +149,10 @@ bola = Bola(largura/2 - 20, altura/2 - 20, rect_bola, 7, 7, player1, player2)
 
 # movimentação dos jogadores
 
-moving_up = False
-moving_down = False
+moving_up1 = False
+moving_down1 = False
+moving_up2 = False
+moving_down2 = False
 pode = True
 
 ## GAME LOOP ##
@@ -145,16 +174,16 @@ while True:
 
 
     fonte = pygame.font.SysFont('Comic Sans MS', 48)
-    texto1 = fonte.render("0", False, branco)
+    texto1 = fonte.render(str(pontos_p_1), False, branco)
     screen.blit(texto1, (largura/2 - 200, 10))
-    texto2 = fonte.render("0", False, branco)
+    texto2 = fonte.render(str(pontos_p_2), False, branco)
     screen.blit(texto2, (largura/2 + 200, 10))
     # os jogadores
 
     #Atualiza os player
     #Todo //
-    player1.updatePlayer()
-    player2.updatePlayer()
+    player1.updatePlayer(1)
+    player2.updatePlayer(2)
 
     #Desenha os players
     player1.drawPlayer()
