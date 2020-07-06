@@ -10,9 +10,9 @@ Depois de algum tempo  aprendendo a usar a biblioteca do PyGame e Python orienta
 
  - [x] animar a bola
  - [x] adicionar colisões com as barras e com os cantos da tela
- - [ ] adicionar pontuação funcional
+ - [x] adicionar pontuação funcional
  - [x] movimentação das barras 
- - [ ] movimentação **individual** das barras
+ - [x] movimentação **individual** das barras
 
 ## Agradecimentos:
 - Nio
