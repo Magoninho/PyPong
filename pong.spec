@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['pong.py'],
-             pathex=['C:\\Users\\Mago\\Documents\\python_reaprendendo\\jogo\\pong'],
+             pathex=['C:\\Users\\Mago\\Documents\\python_reaprendendo\\jogo\\pong\\PyPong'],
              binaries=[],
              datas=[],
              hiddenimports=[],

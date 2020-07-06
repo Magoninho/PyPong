@@ -1,4 +1,4 @@
-import pygame, sys
+import pygame, sys, time
 
 # setup inicial
 pygame.init()
@@ -6,12 +6,15 @@ clock = pygame.time.Clock()
 
 #cores
 branco = (255,255,255)
+red = (255, 0, 0)
 preto = (0,0,0)
 # janela
 largura = 1280
 altura = 720
 screen = pygame.display.set_mode((largura, altura))
 pygame.display.set_caption("PyPong by magoninho")
+
+start_time = 300
 
 #### CLASSES ####
 
@@ -67,7 +70,6 @@ class Player:
             self.rect.y = altura - 140
         if self.rect.y < 0:
             self.rect.y = 0
-
 class Bola:
     def __init__(self, x, y, rect, x_vel, y_vel, player1, player2):
         self.x = x
@@ -80,6 +82,7 @@ class Bola:
     def drawBola(self):
         pygame.draw.rect(screen, branco, self.rect)
     def animation(self):
+        
         self.rect.x += self.x_vel
         self.rect.y += self.y_vel
 
@@ -99,13 +102,11 @@ class Bola:
 
         if self.rect.colliderect(self.player1) or self.rect.colliderect(self.player2):
             self.x_vel *= -1 ## MUDANÇA DE DIREÇÃO
-
 # DESENHOS
 rect_bola = pygame.Rect(largura/2 - 20, altura/2 - 20, 40, 40)
-rect_player1 = pygame.Rect(15, 70, 25, 140)
-rect_player2 = pygame.Rect(largura - 40, 70, 25, 140)
+rect_player1 = pygame.Rect(15, 140, 25, 140)
+rect_player2 = pygame.Rect(largura - 40, 140, 25, 140)
 ############################## ANIMAÇÃO DA BOLA ##############################
-
 
 # pegando a altura para a bolinha colidir
 window_Width = screen.get_width()
@@ -123,7 +124,7 @@ bola = Bola(largura/2 - 20, altura/2 - 20, rect_bola, 7, 7, player1, player2)
 
 moving_up = False
 moving_down = False
-
+pode = True
 
 ## GAME LOOP ##
 while True: 
@@ -162,11 +163,17 @@ while True:
 
     #bola
     bola.drawBola()
-    bola.animation()
 
-
-
-
-
+    start_time -= 1
+    
+    if pode:
+        segundos = fonte.render(str(start_time / 100), False, red)
+        screen.blit(segundos, (largura/2 - 150, 200))
+    if start_time <= 0:
+        bola.animation()
+        pode = False
+    
     pygame.display.flip()
     clock.tick(60)
+
+    
