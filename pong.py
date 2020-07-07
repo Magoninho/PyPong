@@ -30,12 +30,14 @@ class Player:
         agora a variavel player contem esse objeto inteiro
         Ex: player.pos_x, player.pos_y etc...
         """ 
+        
         self.pos_x = x
         self.pos_y = y
         self.size_x = size_x
         self.size_y = size_y
         self.rect = rect
         self.s_vel = s_vel
+
     def drawPlayer(self):
         """
         Essa função vai ser executada no GAME LOOP para desenhar o player
@@ -49,48 +51,24 @@ class Player:
     def updatePlayer(self, p):
 
         global moving_up1, moving_down1, moving_up2, moving_down2
+        keys = pygame.key.get_pressed()
         if p == 1:
             # cima e baixo (apertando)
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_w:
-                    moving_up1 = True
-                if event.key == pygame.K_s:
-                    moving_down1 = True
-            
-            # cima e baixo (soltando a tecla)
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_w:
-                    moving_up1 = False
-                if event.key == pygame.K_s:
-                    moving_down1 = False
-
-            if moving_up1 == True:
+            if keys[pygame.K_w]:
                 self.rect.y -= self.s_vel
-            if moving_down1 == True:
+            if keys[pygame.K_s]:
                 self.rect.y += self.s_vel
+                
 
             if self.rect.y > altura - 140:          ## colisões para nao sair do cenário
                 self.rect.y = altura - 140
             if self.rect.y < 0:
                 self.rect.y = 0
-        else:
+        if p == 2:  
             # cima e baixo (apertando)
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP:
-                    moving_up2 = True
-                if event.key == pygame.K_DOWN:
-                    moving_down2 = True
-            
-            # cima e baixo (soltando a tecla)
-            if event.type == pygame.KEYUP:
-                if event.key == pygame.K_UP:
-                    moving_up2 = False
-                if event.key == pygame.K_DOWN:
-                    moving_down2 = False
-
-            if moving_up2 == True:
+            if keys[pygame.K_UP]:
                 self.rect.y -= self.s_vel
-            if moving_down2 == True:
+            if keys[pygame.K_DOWN]:
                 self.rect.y += self.s_vel
 
             if self.rect.y > altura - 140:          ## colisões para nao sair do cenário
@@ -110,6 +88,16 @@ class Bola:
         pygame.draw.rect(screen, branco, self.rect)
     def animation(self):
         global pontos_p_1, pontos_p_2
+
+        self.y_vel += 0.01
+        if self.x_vel < 0:
+            self.x_vel -= 0.01
+        else:
+            self.x_vel += 0.001
+
+        if self.x_vel > 12:
+            self.x_vel = 12
+
         self.rect.x += self.x_vel
         self.rect.y += self.y_vel
 
@@ -142,9 +130,11 @@ window_Height = screen.get_height()
 
 #################################################################################
 
+
+
 ## INSTANCIAS ##
-player1 = Player(15, altura/2 - 70, 25, 140, rect_player1, 7)
-player2 = Player(largura - 40, altura/2 - 70, 25, 140, rect_player2, 7)
+player1 = Player(15, altura/2 - 70, 25, 140, rect_player1, 8)
+player2 = Player(largura - 40, altura/2 - 70, 25, 140, rect_player2, 8)
 bola = Bola(largura/2 - 20, altura/2 - 20, rect_bola, 7, 7, player1, player2)
 
 # movimentação dos jogadores
@@ -161,7 +151,7 @@ while True:
         if event.type == pygame.QUIT:
             pygame.quit()
             sys.exit()
-
+    
     #Limpa a tela com a cor
     screen.fill(preto)
 
@@ -204,5 +194,4 @@ while True:
     
     pygame.display.flip()
     clock.tick(60)
-
     
