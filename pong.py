@@ -1,8 +1,11 @@
-import pygame, sys, time
+import pygame, sys, time, os
 
 # setup inicial
 pygame.init()
 clock = pygame.time.Clock()
+
+pygame.mixer.music.load('data\song-for-denise.mp3')
+pygame.mixer.music.play(-1)
 
 #cores
 branco = (255,255,255)
@@ -107,15 +110,25 @@ class Bola:
         ###### GOLS dos jogadores ######
         
         if self.rect.x >= window_Width - 40: # GOL DO PLAYER 1
+            ponto = pygame.mixer.Sound('data\ponto.wav')
+            ponto.play()
             self.rect.x = largura / 2 - 20
             self.rect.y = altura / 2 - 20
             pontos_p_1 += 1
         if self.rect.x <= 0: # GOL DO PLAYER 2
+            ponto = pygame.mixer.Sound('data\ponto.wav')
+            ponto.play()
             self.rect.x = largura / 2 - 20
             self.rect.y = altura / 2 - 20
             pontos_p_2 += 1
 
-        if self.rect.colliderect(self.player1) or self.rect.colliderect(self.player2):
+        if self.rect.colliderect(self.player1):
+            impacto = pygame.mixer.Sound('data\impacto1.wav')
+            impacto.play()
+            self.x_vel *= -1 ## MUDANÇA DE DIREÇÃO
+        if self.rect.colliderect(self.player2):
+            impacto = pygame.mixer.Sound('data\impacto2.wav')
+            impacto.play()
             self.x_vel *= -1 ## MUDANÇA DE DIREÇÃO
 # DESENHOS
 rect_bola = pygame.Rect(largura/2 - 20, altura/2 - 20, 40, 40)
